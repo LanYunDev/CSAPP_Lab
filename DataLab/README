@@ -1,0 +1,128 @@
+***********************
+CS:APP数据实验室
+对学生的指导
+***********************
+
+你的目标是修改你的 bits.c 副本，以便它能通过 btest 中的所有中的所有测试，而不违反任何编码准则。
+
+
+*********
+0. 文件:
+*********
+
+Makefile    - 制作btest、fshow和ishow。
+README	   - 这个文件
+bits.c 	   - 你要修改和提交的文件
+bits.h 	   - 头文件
+btest.c    - btest的主程序
+  btest.h         - 用于构建btest
+  decl.c          - 用于构建btest
+  tests.c         - 用于构建btest
+  tests-header.c  - 用于构建btest。
+dlc*            - 规则检查编译器二进制文件（数据实验室编译器）。
+driver.pl*      - 使用btest和dlc来自动升级bits.c的驱动程序
+Driverhdrs.pm   - 用于可选的 "击败教授 "竞赛的头文件
+fshow.c         - 用于检查浮点表示法的工具
+ishow.c         - 用于检查整数表示法的工具
+
+***********************************************************
+1. 修改bits.c并检查其是否符合dlc的规定
+***********************************************************
+
+重要提示：在你开始之前，仔细阅读bits.c文件中的说明。如果你想获得全额奖励，这些说明给出了你需要遵循的编码规则。
+
+使用dlc编译器（./dlc）自动检查你的bits.c版本是否符合编码准则。
+
+       unix> ./dlc bits.c
+
+如果你的代码没有问题，dlc会无声地返回。
+否则，它将打印出标记任何问题的信息。
+用 -e 参数运行dlc:
+
+    	unix> ./dlc -e bits.c  
+
+导致dlc打印每个函数所使用的运算符的数量。
+
+一旦你有了一个合法的解决方案，你就可以用./btest程序来测试它的正确性。
+
+*********************
+2. 用btest进行测试
+*********************
+
+这个目录下的Makefile编译了你的bits.c版本，并加入了额外的代码，以创建一个名为btest的程序（或测试线束）。
+
+要编译和运行btest程序，键入:
+
+    unix> make btest
+    unix> ./btest [optional cmd line args]
+
+你需要在每次改变bits.c的时候重新编译btest
+程序时，都需要重新编译btest。当从一个平台转移到另一个平台时，你会想要
+摆脱btest的旧版本并生成一个新版本。 使用
+命令:
+
+    unix> make clean
+    unix> make btest
+
+Btest通过在每个函数上运行数以百万计的测试案例来测试你的代码的正确性。
+它对众所周知的角落情况进行广泛的测试，例如整数谜题的Tmin和0，以及浮点谜题的0、inf和去正规化和正规化数字之间的边界。
+当btest在你的某个函数中检测到一个错误时，它会打印出失败的测试、错误的结果和预期的结果，然后终止对该函数的测试。
+
+以下是btest的命令行选项:
+
+  unix> ./btest -h
+  Usage: ./btest [-hg] [-r <n>] [-f <name> [-1|-2|-3 <val>]*] [-T <time limit>]
+    -1 <val>  Specify first function argument
+    -2 <val>  Specify second function argument
+    -3 <val>  Specify third function argument
+    -f <name> Test only the named function
+    -g        Format output for autograding with no error messages
+    -h        Print this message
+    -r <n>    Give uniform weight of n for all problems
+    -T <lim>  Set timeout limit to lim
+
+Examples:
+
+  Test all functions for correctness and print out error messages:
+  unix> ./btest
+
+  Test all functions in a compact form with no error messages:
+  unix> ./btest -g
+
+  Test function foo for correctness:
+  unix> ./btest -f foo
+
+  Test function foo for correctness with specific arguments:
+  unix> ./btest -f foo -1 27 -2 0xf
+
+Btest不会检查你的代码是否符合编码指南。 使用dlc来做这个。
+
+*******************
+3. Helper Programs
+*******************
+
+我们包括ishow和fshow程序，分别帮助你解读整数和浮点的表示方法。
+每个程序都需要一个十进制或十六进制数字作为参数。要建立它们，请键入。
+
+    unix> make
+
+Example usages:
+
+    unix> ./ishow 0x27
+    Hex = 0x00000027,	Signed = 39,	Unsigned = 39
+
+    unix> ./ishow 27
+    Hex = 0x0000001b,	Signed = 27,	Unsigned = 27
+
+    unix> ./fshow 0x15213243
+    Floating point value 3.255334057e-26
+    Bit Representation 0x15213243, sign = 0, exponent = 0x2a, fraction = 0x213243
+    Normalized.  +1.2593463659 X 2^(-85)
+
+    linux> ./fshow 15213243
+    Floating point value 2.131829405e-38
+    Bit Representation 0x00e822bb, sign = 0, exponent = 0x01, fraction = 0x6822bb
+    Normalized.  +1.8135598898 X 2^(-126)
+
+
+
